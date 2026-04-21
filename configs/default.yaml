@@ -1,0 +1,56 @@
+data:
+  mwoz_processed_dir: "data/MultiWOZ_2.4/mwz2.4"
+  mwoz_raw_path: "data/MultiWOZ_2.4/data.json"
+  mwoz_ontology_path: "data/MultiWOZ_2.4/mwz2.4/ontology.json"
+  sgd_dir: "data/SGD"
+  abcd_data_path: "data/ABCD/abcd_v1.1.json"
+  abcd_kb_path: "data/ABCD/kb.json"
+  cache_dir: "cache"
+
+model:
+  predictor_checkpoint: "outputs/best_predictor.pt"
+  features_only_checkpoint: "outputs/features_only.pt"
+  text_only_checkpoint: "outputs/text_only.pt"
+  stream_a:
+    input_dim: 5
+    d_model: 64
+    nhead: 4
+    num_layers: 3
+    dropout: 0.1
+  stream_b:
+    encoder_name: "roberta-base"
+    freeze_layers: 8
+    output_dim: 256
+    max_length: 512
+  fusion:
+    hidden_dim: 256
+    dropout: 0.2
+
+training:
+  lr: 1.0e-4
+  encoder_lr_factor: 0.1
+  batch_size: 32
+  epochs: 30
+  early_stop_patience: 5
+  early_pred_lambda: 0.3
+  gradient_clip: 1.0
+  warmup_ratio: 0.1
+  gpu_ids: [0]
+  seed: 42
+  num_workers: 4
+
+features:
+  conflict_model: "sentence-transformers/all-MiniLM-L6-v2"
+  conflict_threshold: 0.3
+
+recovery:
+  threshold_search_range: [0.1, 0.9]
+  threshold_num_steps: 100
+  max_fpr: 0.15
+  t5_model: "t5-small"
+  llm_model: "meta-llama/Llama-3.1-8B-Instruct"
+
+output:
+  checkpoint_dir: "outputs"
+  plot_dir: "plots"
+  log_dir: "outputs/logs"
